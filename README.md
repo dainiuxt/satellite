@@ -6,8 +6,8 @@
 
 While this sample implementation uses GitHub, the protocol is agnostic to the hosting service.
 
-**Using a custom repo name**
-By default, the client looks for data at `https://{domain}/satellite/`.
+**Using a custom repo name**:
+by default, the client looks for data at `https://{domain}/satellite/`.
 If you name your repo something other than `satellite`, add a `satellite.json`
 file to the root of your main site (e.g. the `username.github.io` repo)
 pointing to the actual repo:
