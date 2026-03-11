@@ -584,6 +584,18 @@ async function start() {
 
   const { domain, repo, token } = getState();
   if (domain && repo && token) {
+    // Ensure keys/_self.json exists (migration for older installs)
+    try {
+      const base = `https://${domain}/${repo.split('/').pop()}`;
+      const resp = await fetch(`${base}/keys/_self.json`);
+      if (!resp.ok) {
+        const contentKey = getContentKey();
+        await pushSelfKey(token, repo, contentKey);
+        console.log('Pushed keys/_self.json for existing install');
+      }
+    } catch (e) {
+      console.warn('Failed to check/push self key:', e);
+    }
     showMain();
     await refreshFollows();
     await refreshFeed();
