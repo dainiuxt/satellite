@@ -200,7 +200,7 @@ Any secrets needed for publishing (e.g. GitHub token)
 
 ## FAQ
 
-> Is this just RSS + PGP?
+> Is this just RSS + encryption?
 
 Yes!
 
