@@ -437,10 +437,11 @@ window.doUnfollow = async function (target) {
     const files = [];
 
     // Re-encrypt each post
+    const satBase = await feed.getSatBase(domain);
     for (const postId of index.posts) {
       try {
         const resp = await fetch(
-          `https://${domain}/${repo}/posts/${postId}.json.enc`
+          `${satBase}/posts/${postId}.json.enc`
         );
         if (!resp.ok) continue;
         const encrypted = new Uint8Array(await resp.arrayBuffer());
