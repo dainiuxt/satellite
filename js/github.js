@@ -25,6 +25,13 @@ export function binaryEntry(path, data) {
   return { path, content: uint8ToBase64(new Uint8Array(data)) };
 }
 
+// Returns the authenticated user's login for the given token.
+export async function getAuthenticatedUser(token) {
+  const resp = await fetch('https://api.github.com/user', { headers: ghHeaders(token) });
+  if (!resp.ok) throw new Error('Invalid token or unable to fetch GitHub user');
+  return (await resp.json()).login;
+}
+
 // Push multiple files in a single commit using the Git Data API.
 // files: array of { path, content (base64) }
 export async function pushFiles(token, repo, files, message) {

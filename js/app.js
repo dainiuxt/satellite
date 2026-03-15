@@ -270,12 +270,12 @@ function renderFeed(posts) {
 // --- Global handlers (called from HTML) ---
 
 window.saveSetup = async function () {
-  const username = document.getElementById('username-input').value.trim();
   const token = document.getElementById('token-input').value.trim();
-  if (!username || !token) return alert('Username and token are required');
+  if (!token) return alert('Token is required');
 
   setStatus('Initializing your site...');
   try {
+    const username = await github.getAuthenticatedUser(token);
     const repo = `${username}/${getRepoName()}`;
     localStorage.setItem('satproto_github_repo', repo);
     localStorage.setItem('satproto_github_token', token);
@@ -573,22 +573,14 @@ window.doReply = async function (postId, postAuthor) {
 // --- Init ---
 
 function updateTokenLink() {
-  const username = document.getElementById('username-input').value.trim();
-  const hint = document.getElementById('token-hint');
-  if (!username) {
-    hint.style.display = 'none';
-    return;
-  }
   const repoName = getRepoName();
   const params = new URLSearchParams({
     name: 'sAT Proto',
     description: `Choose "Only select repositories"\nSelect "${repoName}"\nClick "Add permissions"\nChoose "Contents"\nSet "Access: Read and write"`,
-    target_name: username,
   });
   document.getElementById('token-link').href =
     `https://github.com/settings/personal-access-tokens/new?${params}`;
   document.getElementById('repo-hint').textContent = repoName;
-  hint.style.display = '';
 }
 
 async function start() {
@@ -606,8 +598,7 @@ async function start() {
   document.getElementById('public-key-display').textContent =
     `Public key: ${pk}`;
 
-  document.getElementById('username-input')
-    .addEventListener('input', updateTokenLink);
+  updateTokenLink();
 
   const { repo, token } = getState();
   if (repo && token) {
